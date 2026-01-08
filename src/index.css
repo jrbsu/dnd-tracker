@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+/* 
+@font-face {
+  font-family: "Scaly Sans";
+  src: local("Scaly Sans"),
+       url("./fonts/Scaly Sans.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Scaly Sans";
+  src: local("Scaly Sans Bold"),
+       url("./fonts/Scaly Sans Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Scaly Sans Caps";
+  src: local("Scaly Sans Caps"),
+       url("./fonts/Scaly Sans Caps.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Scaly Sans Caps";
+  src: local("Scaly Sans Caps Bold"),
+       url("./fonts/Scaly Sans Caps Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+} */
+
+body {
+  margin: 0;
+  background: #0b1020;
+}
+
+/* iOS safe-area support */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.btn {
+  @apply rounded-xl px-3 py-2 font-semibold shadow-sm active:scale-[0.98] transition;
+}
+
+.btn-primary {
+  @apply bg-lime-700 text-white hover:bg-lime-600;
+}
+
+.btn-ghost {
+  @apply bg-white/10 text-white hover:bg-white/15;
+}
+
+.btn-danger {
+  @apply bg-rose-700 text-white hover:bg-rose-600;
+}
+
+.pill {
+  @apply rounded-full px-3 py-1 text-sm font-semibold bg-white/10 text-white;
+}
+
+.pill-on {
+  @apply bg-lime-500 text-white;
+}
+
+.card {
+  @apply rounded-2xl bg-slate-900/90 text-white shadow-lg border border-white/15;
+}
