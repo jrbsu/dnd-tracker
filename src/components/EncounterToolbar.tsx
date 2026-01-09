@@ -8,7 +8,7 @@ export function EncounterToolbar(props: {
   onUndo: () => void
   onNew: () => void
   onImport: (encounter: Encounter) => void
-  onClearInitiative: () => void // ✅ add this
+  onClearInitiative: () => void
 }) {
   const { encounter, canUndo, onUndo, onNew, onImport, onClearInitiative } = props
 

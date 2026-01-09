@@ -86,5 +86,5 @@ body {
 }
 
 .card {
-  @apply rounded-2xl bg-slate-900/90 text-white shadow-lg border border-white/15;
+  @apply rounded-2xl bg-zinc-900/90 text-white shadow-lg border border-white/15;
 }

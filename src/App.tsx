@@ -18,7 +18,6 @@ import { loadTemplates, saveTemplates, templateFromCombatant, upsertTemplate } f
 
 type Tab = 'encounter' | 'library'
 
-// ✅ Local helper type: AddCombatantPayload + optional per-creature max HP rolls
 type AddPayloadWithRolls = AddCombatantPayload & { rolledMaxHps?: number[] }
 
 function InnerApp() {
@@ -86,7 +85,6 @@ function InnerApp() {
     const rolledMaxHps = Array.from({ length: count }, () => rollMaxHp(tpl.maxHP))
     const firstMax = rolledMaxHps[0] ?? 1
 
-    // ✅ IMPORTANT: don’t type this as AddCombatantPayload (it doesn’t know about rolledMaxHps)
     const payload: AddPayloadWithRolls = {
       name: tpl.name,
       side: tpl.side,
@@ -102,7 +100,7 @@ function InnerApp() {
       buffLibrary: [...(tpl.buffLibrary ?? [])],
 
       count,
-      rolledMaxHps, // ✅ reducer will use this per creature
+      rolledMaxHps,
     }
 
     dispatch({ type: 'ADD_COMBATANT', payload })

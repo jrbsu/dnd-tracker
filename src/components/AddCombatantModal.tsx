@@ -51,7 +51,6 @@ export function AddCombatantModal(props: {
   const [side, setSide] = useState<Side>('Enemy')
   const [count, setCount] = useState(1)
 
-  // ✅ Keep both a raw string (dice expression) and a numeric value (bump pad)
   const [maxHpRaw, setMaxHpRaw] = useState('')
   const [maxHP, setMaxHP] = useState(10)
 

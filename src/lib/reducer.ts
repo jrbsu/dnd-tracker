@@ -33,8 +33,6 @@ export type Action =
       conditions?: string[]
       resistances?: Combatant['resistances']
       buffLibrary?: string[]
-
-      // ✅ NEW: if present, use this value per created combatant
       rolledMaxHps?: number[]
     }
   }
