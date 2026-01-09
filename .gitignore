@@ -139,4 +139,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 # Other stuff
-./src/lib/defaultTemplates.ts
+src/lib/defaultTemplates.ts
+fonts/

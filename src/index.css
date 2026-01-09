@@ -10,42 +10,6 @@ html,
 body {
   height: 100%;
 }
-/* 
-@font-face {
-  font-family: "Scaly Sans";
-  src: local("Scaly Sans"),
-       url("./fonts/Scaly Sans.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Scaly Sans";
-  src: local("Scaly Sans Bold"),
-       url("./fonts/Scaly Sans Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Scaly Sans Caps";
-  src: local("Scaly Sans Caps"),
-       url("./fonts/Scaly Sans Caps.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Scaly Sans Caps";
-  src: local("Scaly Sans Caps Bold"),
-       url("./fonts/Scaly Sans Caps Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-} */
 
 body {
   margin: 0;
