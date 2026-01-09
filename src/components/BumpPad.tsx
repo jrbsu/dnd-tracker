@@ -70,11 +70,6 @@ export function BumpPadOptional(props: {
 
   return (
     <div className="space-y-2">
-      {showClear ? (
-        <div className="flex justify-end">
-          <button type="button" className="btn btn-ghost" onClick={() => onChange('')}>Clear</button>
-        </div>
-      ) : null}
       <BumpPad value={resolved} onChange={(v) => onChange(v)} min={min} />
       {value === '' ? (
         <div className="text-xs text-white/60">
