@@ -89,14 +89,19 @@ export function DetailsPanel(props: {
   return (
     <div className="space-y-3">
       <div className="card p-4">
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <div className="text-sm text-white/60">{combatant.side}</div>
             <div className="text-2xl font-extrabold truncate">{combatant.name}</div>
             <div className="text-sm text-white/70">
               Init <span className="font-bold tabular-nums">{combatant.initiative ?? '—'}</span>
-              {combatant.ac != null ? <span className="ml-3">AC <span className="font-bold tabular-nums">{combatant.ac}</span></span> : null}
+              {combatant.ac != null ? (
+                <span className="ml-3">
+                  AC <span className="font-bold tabular-nums">{combatant.ac}</span>
+                </span>
+              ) : null}
             </div>
+
             {combatant.url ? (
               <a
                 href={combatant.url}
@@ -108,88 +113,105 @@ export function DetailsPanel(props: {
               </a>
             ) : null}
           </div>
-          <div className="flex gap-2">
+
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-2 sm:justify-end">
             {onSaveTemplate ? (
-              <button className="btn btn-ghost" onClick={() => onSaveTemplate(combatant)} type="button">
+              <button
+                className="btn btn-ghost w-full sm:w-auto"
+                onClick={() => onSaveTemplate(combatant)}
+                type="button"
+              >
                 Save template
               </button>
             ) : null}
-            <button className="btn btn-ghost" onClick={startEdit}>Edit</button>
-            <button className="btn btn-danger" onClick={() => onRemoveCombatant(combatant.id)}>Remove</button>
+
+            <button className="btn btn-ghost w-full sm:w-auto" onClick={startEdit} type="button">
+              Edit
+            </button>
+
+            <button
+              className="btn btn-danger w-full sm:w-auto"
+              onClick={() => onRemoveCombatant(combatant.id)}
+              type="button"
+            >
+              Remove
+            </button>
           </div>
         </div>
       </div>
 
-      {combatant && combatant.side !== 'Enemy' && combatant.hp === 0 && combatant.status !== 'dead' ? (
-        <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 p-3">
-          <div className="font-extrabold mb-2">Death saving throws</div>
+      {
+        combatant && combatant.side !== 'Enemy' && combatant.hp === 0 && combatant.status !== 'dead' ? (
+          <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 p-3">
+            <div className="font-extrabold mb-2">Death saving throws</div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="text-sm">
-              ✅ <span className="font-bold tabular-nums">{combatant.deathSaveSuccesses ?? 0}</span> / 3
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="text-sm">
+                ✅ <span className="font-bold tabular-nums">{combatant.deathSaveSuccesses ?? 0}</span> / 3
+              </div>
+              <div className="text-sm">
+                ❌ <span className="font-bold tabular-nums">{combatant.deathSaveFailures ?? 0}</span> / 3
+              </div>
+              {combatant.status === 'stable' ? (
+                <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-200">STABLE</span>
+              ) : null}
+              {combatant.deathSaveFailures === 3 ? (
+                <span className="text-xs px-2 py-1 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-200">DEAD</span>
+              ) : null}
             </div>
-            <div className="text-sm">
-              ❌ <span className="font-bold tabular-nums">{combatant.deathSaveFailures ?? 0}</span> / 3
+
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                className="btn btn-ghost"
+                onClick={() => {
+                  const s = Math.min(3, (combatant.deathSaveSuccesses ?? 0) + 1)
+                  const f = combatant.deathSaveFailures ?? 0
+                  onUpdateCombatant(combatant.id, {
+                    deathSaveSuccesses: s,
+                    deathSaveFailures: f,
+                    status: s >= 3 ? 'stable' : 'down',
+                  })
+                }}
+                type="button"
+              >
+                + Success
+              </button>
+
+              <button
+                className="btn btn-ghost"
+                onClick={() => {
+                  const s = combatant.deathSaveSuccesses ?? 0
+                  const f = Math.min(3, (combatant.deathSaveFailures ?? 0) + 1)
+                  onUpdateCombatant(combatant.id, {
+                    deathSaveSuccesses: s,
+                    deathSaveFailures: f,
+                    status: f >= 3 ? 'dead' : 'down',
+                  })
+                }}
+                type="button"
+              >
+                + Failure
+              </button>
+
+              <button
+                className="btn btn-ghost"
+                onClick={() => onUpdateCombatant(combatant.id, {
+                  deathSaveSuccesses: 0,
+                  deathSaveFailures: 0,
+                  status: 'down',
+                })}
+                type="button"
+              >
+                Reset
+              </button>
             </div>
-            {combatant.status === 'stable' ? (
-              <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-200">STABLE</span>
-            ) : null}
-            {combatant.deathSaveFailures === 3 ? (
-              <span className="text-xs px-2 py-1 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-200">DEAD</span>
-            ) : null}
+
+            <div className="mt-2 text-xs text-white/60">
+              Healing above 0 HP automatically clears death saves.
+            </div>
           </div>
-
-          <div className="mt-2 flex flex-wrap gap-2">
-            <button
-              className="btn btn-ghost"
-              onClick={() => {
-                const s = Math.min(3, (combatant.deathSaveSuccesses ?? 0) + 1)
-                const f = combatant.deathSaveFailures ?? 0
-                onUpdateCombatant(combatant.id, {
-                  deathSaveSuccesses: s,
-                  deathSaveFailures: f,
-                  status: s >= 3 ? 'stable' : 'down',
-                })
-              }}
-              type="button"
-            >
-              + Success
-            </button>
-
-            <button
-              className="btn btn-ghost"
-              onClick={() => {
-                const s = combatant.deathSaveSuccesses ?? 0
-                const f = Math.min(3, (combatant.deathSaveFailures ?? 0) + 1)
-                onUpdateCombatant(combatant.id, {
-                  deathSaveSuccesses: s,
-                  deathSaveFailures: f,
-                  status: f >= 3 ? 'dead' : 'down',
-                })
-              }}
-              type="button"
-            >
-              + Failure
-            </button>
-
-            <button
-              className="btn btn-ghost"
-              onClick={() => onUpdateCombatant(combatant.id, {
-                deathSaveSuccesses: 0,
-                deathSaveFailures: 0,
-                status: 'down',
-              })}
-              type="button"
-            >
-              Reset
-            </button>
-          </div>
-
-          <div className="mt-2 text-xs text-white/60">
-            Healing above 0 HP automatically clears death saves.
-          </div>
-        </div>
-      ) : null}
+        ) : null
+      }
 
       <HpControls
         combatant={combatant}
@@ -279,6 +301,6 @@ export function DetailsPanel(props: {
           </div>
         </div>
       </Modal>
-    </div>
+    </div >
   )
 }
