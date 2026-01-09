@@ -59,7 +59,7 @@ export function BumpPadOptional(props: {
   baseline?: number
   showClear?: boolean
 }) {
-  const { value, onChange, min = 0, baseline = 10, showClear = true } = props
+  const { value, onChange, min = 0, baseline = 10 } = props
 
   const resolved = value === '' ? baseline : value
 

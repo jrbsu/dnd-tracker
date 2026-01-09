@@ -242,34 +242,32 @@ export function DetailsPanel(props: {
             placeholder="https://…"
           />
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <div className="font-bold mb-2">Initiative</div>
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <label className="flex items-center gap-2 text-sm text-white/80">
-                <input type="checkbox" checked={initiativeSet} onChange={(e) => setInitiativeSet(e.target.checked)} />
-                Set initiative
-              </label>
-              {!initiativeSet ? <span className="text-xs text-white/60">(shows in “Needs initiative”)</span> : null}
-            </div>
-            {initiativeSet ? <InitiativePicker value={initiative} onChange={setInitiative} /> : null}
+        <div>
+          <div className="font-bold mb-2">Initiative</div>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <label className="flex items-center gap-2 text-sm text-white/80">
+              <input type="checkbox" checked={initiativeSet} onChange={(e) => setInitiativeSet(e.target.checked)} />
+              Set initiative
+            </label>
+            {!initiativeSet ? <span className="text-xs text-white/60">(shows in “Needs initiative”)</span> : null}
           </div>
-          <div>
-            <div className="font-bold mb-2">Max HP</div>
-            <input
-              type="number"
-              min={1}
-              className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-3 text-white"
-              value={maxHP}
-              onChange={(e) => {
-                const v = e.target.value
-                if (v === '') return
-                setMaxHP(Math.max(1, Math.floor(Number(v))))
-              }}
-            />
-            <div className="mt-2">
-              <BumpPad value={maxHP} onChange={setMaxHP} min={1} />
-            </div>
+          {initiativeSet ? <InitiativePicker value={initiative} onChange={setInitiative} /> : null}
+        </div>
+        <div>
+          <div className="font-bold mb-2">Max HP</div>
+          <input
+            type="number"
+            min={1}
+            className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-3 text-white"
+            value={maxHP}
+            onChange={(e) => {
+              const v = e.target.value
+              if (v === '') return
+              setMaxHP(Math.max(1, Math.floor(Number(v))))
+            }}
+          />
+          <div className="mt-2">
+            <BumpPad value={maxHP} onChange={setMaxHP} min={1} />
           </div>
         </div>
         <div>

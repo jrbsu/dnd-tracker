@@ -242,48 +242,46 @@ export function AddCombatantModal(props: {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <div className="font-bold mb-2">Max HP</div>
-              <input
-                value={maxHpRaw}
-                onChange={(e) => {
-                  const v = e.target.value
-                  setMaxHpRaw(v)
+          <div>
+            <div className="font-bold mb-2">Max HP</div>
+            <input
+              value={maxHpRaw}
+              onChange={(e) => {
+                const v = e.target.value
+                setMaxHpRaw(v)
 
-                  // If it’s a plain number, keep bump pad in sync.
-                  const n = Number(v)
-                  if (!isDiceExpression(v.trim()) && Number.isFinite(n)) {
-                    setMaxHP(clampMin1(n))
-                  }
+                // If it’s a plain number, keep bump pad in sync.
+                const n = Number(v)
+                if (!isDiceExpression(v.trim()) && Number.isFinite(n)) {
+                  setMaxHP(clampMin1(n))
+                }
+              }}
+              placeholder="e.g. 30 or 13d6+27"
+              className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-3 text-white"
+            />
+            <div className="mt-2">
+              <BumpPad
+                value={maxHP}
+                onChange={(v) => {
+                  setMaxHP(v)
+                  setMaxHpRaw(String(v))
                 }}
-                placeholder="e.g. 30 or 13d6+27"
-                className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-3 text-white"
+                min={1}
               />
-              <div className="mt-2">
-                <BumpPad
-                  value={maxHP}
-                  onChange={(v) => {
-                    setMaxHP(v)
-                    setMaxHpRaw(String(v))
-                  }}
-                  min={1}
-                />
-              </div>
             </div>
+          </div>
 
-            <div>
-              <div className="font-bold mb-2">AC</div>
-              <input
-                type="number"
-                className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-3 text-white"
-                placeholder="e.g. 14"
-                value={ac}
-                onChange={(e) => setAc(e.target.value === '' ? '' : Number(e.target.value))}
-              />
-              <div className="mt-2">
-                <BumpPadOptional value={ac} onChange={setAc} min={0} baseline={10} />
-              </div>
+          <div>
+            <div className="font-bold mb-2">AC</div>
+            <input
+              type="number"
+              className="w-full rounded-xl bg-black/30 border border-white/10 px-3 py-3 text-white"
+              placeholder="e.g. 14"
+              value={ac}
+              onChange={(e) => setAc(e.target.value === '' ? '' : Number(e.target.value))}
+            />
+            <div className="mt-2">
+              <BumpPadOptional value={ac} onChange={setAc} min={0} baseline={10} />
             </div>
           </div>
         </div>
