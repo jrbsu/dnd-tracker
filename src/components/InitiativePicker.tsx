@@ -1,4 +1,3 @@
-import React, { useMemo, useState } from 'react'
 import { rollDiceExpression } from '../lib/dice'
 
 function clampInt(n: number): number {
@@ -15,7 +14,11 @@ export function InitiativePicker(props: {
 
   const rollD20 = () => {
     const r = rollDiceExpression('d20').total
-    onChange(r)
+    onChange(clampInt(r))
+  }
+
+  const bump = (delta: number) => {
+    onChange(clampInt(value) + delta)
   }
 
   return (
@@ -36,7 +39,6 @@ export function InitiativePicker(props: {
         </div>
       ) : null}
 
-      {/* Your existing initiative grid/buttons below */}
       <div className="grid grid-cols-5 gap-2">
         {Array.from({ length: 20 }, (_, i) => i + 1).map(n => (
           <button
@@ -48,6 +50,31 @@ export function InitiativePicker(props: {
             {n}
           </button>
         ))}
+      </div>
+
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-sm text-white/70">
+          Current: <span className="font-medium text-white">{clampInt(value)}</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => bump(-1)}
+            title="Decrease initiative by 1"
+          >
+            −1
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => bump(+1)}
+            title="Increase initiative by 1"
+          >
+            +1
+          </button>
+        </div>
       </div>
     </div>
   )
