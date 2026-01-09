@@ -20,31 +20,29 @@ export type DamageType =
 
 export type ResistanceKind = 'normal' | 'resist' | 'vuln' | 'immune'
 
+export type MaxHpSpec = number | string
+
 export interface Combatant {
   id: string
   name: string
   side: Side
-  /**
-   * Initiative for turn order. Null means “not set yet”.
-   * (Lets you prep combats before rolling.)
-   */
   initiative: number | null
-  sortOrder: number
-  groupId?: string
-  groupLabel?: string
-  maxHP: number | string
+  maxHP: number
   hp: number
   tempHP: number
   ac?: number
-  notes?: string
+  notes: string
   conditions: string[]
   resistances: Partial<Record<DamageType, ResistanceKind>>
-  buffLibrary: string[] // quick-cast buttons (per PC)
-  order: number
-  status?: LifeState
+  buffLibrary: string[]
+  url?: string
+  status?: 'alive' | 'down' | 'stable' | 'dead'
   deathSaveSuccesses?: number
   deathSaveFailures?: number
-  url?: string
+  order?: number
+  sortOrder?: number
+  groupId?: string
+  groupLabel?: string
 }
 
 export interface Effect {

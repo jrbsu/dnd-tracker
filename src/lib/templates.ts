@@ -1,4 +1,4 @@
-import type { Combatant, DamageType, ResistanceKind, Side } from './types'
+import type { Combatant, MaxHpSpec, Side, DamageType, ResistanceKind } from './types'
 import { isDiceExpression } from './dice'
 import { nowIso, uid } from './utils'
 
@@ -10,13 +10,13 @@ export interface CombatantTemplate {
   side: Side
   maxHP: number | string
   ac?: number
-  notes?: string
-  resistances?: Partial<Record<DamageType, ResistanceKind>>
-  conditions?: string[]
-  buffLibrary?: string[]
+  notes: string
+  resistances: Partial<Record<DamageType, ResistanceKind>>
+  conditions: string[]
+  buffLibrary: string[]
+  url?: string
   createdAt: string
   updatedAt: string
-  url?: string
 }
 
 const STORAGE_KEY = 'combatant_templates'

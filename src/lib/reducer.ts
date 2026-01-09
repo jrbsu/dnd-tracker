@@ -10,6 +10,7 @@ import {
   sortCombatantsByInitiative,
   uid,
 } from './utils'
+import { isDiceExpression, rollDiceExpression } from './dice'
 
 export type HpMode = 'current' | 'temp'
 
@@ -107,15 +108,18 @@ function ensureSortOrders(encounter: Encounter): Encounter {
   const groupOrder = new Map<string, number>()
 
   const combatants = encounter.combatants.map((c: any) => {
-    if (typeof c.sortOrder === 'number') return c
-
     const key = c.groupId ?? c.id
-    let so = groupOrder.get(key)
+    let so = typeof c.sortOrder === 'number' ? c.sortOrder : groupOrder.get(key)
     if (so == null) {
       so = next++
       groupOrder.set(key, so)
     }
-    return { ...c, sortOrder: so }
+
+    return {
+      ...c,
+      sortOrder: so,
+      buffLibrary: Array.isArray(c.buffLibrary) ? c.buffLibrary : [],
+    }
   })
 
   return { ...encounter, combatants }
@@ -127,6 +131,23 @@ function floorInt(v: number | string | null | undefined): number | undefined {
   return Number.isFinite(n) ? Math.floor(n) : undefined
 }
 
+function resolveMaxHp(spec: number | string | null | undefined): number {
+  if (typeof spec === 'number' && Number.isFinite(spec)) {
+    return Math.max(1, Math.floor(spec))
+  }
+  if (typeof spec === 'string') {
+    const s = spec.trim()
+    if (!s) return 1
+    if (isDiceExpression(s)) {
+      const rolled = rollDiceExpression(s)
+      return Math.max(1, Math.floor(diceTotal(rolled)))
+    }
+    const n = Number(s)
+    return Number.isFinite(n) ? Math.max(1, Math.floor(n)) : 1
+  }
+  return 1
+}
+
 /** Safely parse number|string into a floored int (or fallback if invalid). */
 function floorIntOr(v: number | string | null | undefined, fallback: number): number {
   return floorInt(v) ?? fallback
@@ -134,6 +155,16 @@ function floorIntOr(v: number | string | null | undefined, fallback: number): nu
 
 function clamp01hp(hp: number, maxHP: number): number {
   return Math.max(0, Math.min(maxHP, Math.floor(hp)))
+}
+
+function diceTotal(r: unknown): number {
+  if (typeof r === 'number' && Number.isFinite(r)) return r
+  if (r && typeof r === 'object') {
+    const anyR = r as any
+    const t = anyR.total ?? anyR.value ?? anyR.result ?? anyR.sum
+    if (typeof t === 'number' && Number.isFinite(t)) return t
+  }
+  return 0
 }
 
 function normalizeAfterHpChange(c: Combatant): Combatant {
@@ -204,7 +235,10 @@ export function reducer(state: State, action: Action): State {
       // Base “fallback” values (used if no per-creature roll is provided)
       const maxHPC = Math.max(1, floorIntOr(maxHP, 1))
       const acC = ac != null ? Math.floor(ac) : undefined
-      const hasPerCreatureRolls = Array.isArray(rolledMaxHps) && rolledMaxHps.length > 0
+      const hasDiceSpec = typeof maxHP === 'string' && isDiceExpression(maxHP.trim())
+      const hasPerCreatureRolls =
+        (Array.isArray(rolledMaxHps) && rolledMaxHps.length > 0) || hasDiceSpec
+
       const hpBase = !hasPerCreatureRolls && hp != null ? Math.floor(hp) : undefined
       const tempHPC = tempHP != null ? Math.floor(tempHP) : 0
 
@@ -244,7 +278,10 @@ export function reducer(state: State, action: Action): State {
       const baseSortOrder = maxExistingSortOrder + 1
 
       const newOnes: Combatant[] = Array.from({ length: count }, (_, i) => {
-        const mhp = Math.max(1, Math.floor(rolledMaxHps?.[i] ?? maxHPC))
+        const mhp =
+          rolledMaxHps?.[i] != null
+            ? Math.max(1, Math.floor(rolledMaxHps[i]!))
+            : resolveMaxHp(maxHP)
 
         // If a base hp was provided, clamp it to mhp; otherwise start full.
         const hpStart = hpBase != null ? Math.max(0, Math.min(mhp, hpBase)) : mhp
@@ -266,7 +303,7 @@ export function reducer(state: State, action: Action): State {
           tempHP: Math.max(0, tempHPC),
 
           url: urlC,
-          
+
           ac: acC,
           notes: notes ?? '',
           conditions: conditions ? [...conditions] : [],
